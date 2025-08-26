@@ -1,0 +1,71 @@
+const readline = require("readline");
+
+// Setup input/output
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+function studentResult() {
+    rl.question("How many subjects do you have? ", (subCount) => {
+        let subjects = Number(subCount);
+        let scores = [];
+        let entered = 0;
+
+        function askScore() {
+            if (entered < subjects) {
+                rl.question(`Marks for subject ${entered + 1}: `, (val) => {
+                    scores.push(Number(val));
+                    entered++;
+                    askScore();
+                });
+            } else {
+                // total & average
+                let sum = 0;
+                for (let i = 0; i < scores.length; i++) {
+                    sum += scores[i];
+                }
+                let avg = sum / subjects;
+
+                // grade logic
+                let gradeLetter = "";
+                switch (true) {
+                    case (avg >= 90):
+                        gradeLetter = "A";
+                        break;
+                    case (avg >= 80):
+                        gradeLetter = "B";
+                        break;
+                    case (avg >= 70):
+                        gradeLetter = "C";
+                        break;
+                    case (avg >= 60):
+                        gradeLetter = "D";
+                        break;
+                    default:
+                        gradeLetter = "F";
+                }
+
+                // extra feature: highest & lowest marks
+                let highest = Math.max(...scores);
+                let lowest = Math.min(...scores);
+
+                // output
+                console.log("\n----- Student Report -----");
+                console.log("Marks Entered: " + scores.join(", "));
+                console.log("Total: " + sum);
+                console.log("Average: " + avg.toFixed(2));
+                console.log("Grade: " + gradeLetter);
+                console.log("Highest Marks: " + highest);
+                console.log("Lowest Marks: " + lowest);
+                console.log("--------------------------");
+
+                rl.close();
+            }
+        }
+
+        askScore();
+    });
+}
+
+studentResult();
